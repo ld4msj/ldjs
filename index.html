@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>桃園龍德宮神將團介紹</title>
+    <style>
+        @font-face {
+            font-family: 'Bakudai';
+            src: url('./Bakudai-ExtraLight.ttf') format('woff2');
+            font-weight: normal;
+            font-style: normal;
+            font-display: swap;
+        }
+body {
+            font-family: 'Bakudai', 'Microsoft JhengHei', 'Helvetica', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f8f8f8;
+            color: #333;
+        }
+        header {
+            background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('./背景.JPG') center/cover no-repeat;
+            height: 80vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: white;
+        }
+        header h1 {
+            font-size: 4.5em;
+            text-shadow: 3px 3px 15px rgba(0,0,0,0.9);
+            font-weight: bold;
+        }
+        nav {
+            background-color: #c00;
+            padding: 1em;
+            text-align: center;
+        }
+        nav a {
+            color: white;
+            margin: 0 1.5em;
+            text-decoration: none;
+            font-size: 1.4em;
+            font-weight: bold;
+        }
+        nav a:hover {
+            text-decoration: underline;
+        }
+        section {
+            padding: 4em 10%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        #intro {
+            background-color: #fff;
+            text-align: center;
+        }
+        #intro .video-container {
+            position: relative;
+            padding-bottom: 56.25%;
+            height: 0;
+            overflow: hidden;
+            max-width: 100%;
+            border-radius: 5px 30px; /* 影片容器也套用相同圓角 */
+            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+            margin: 2em 0;
+        }
+        #intro .video-container video {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 5px 30px; /* 確保影片本身也跟隨圓角 */
+        }
+        #history, #activities {
+            background-color: #fef5f5;
+        }
+        #gallery {
+            background-color: #fff;
+        }
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2em;
+        }
+        /* 全部照片（包含單張圖片與畫廊內圖片）統一套用 border-radius: 5px 30px; */
+        img {
+            border-radius: 5px 30px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            height: auto;
+            display: block;
+            transition: transform 0.3s;
+        }
+        img:hover {
+            transform: scale(1.05);
+        }
+        footer {
+            background-color: #333;
+            color: white;
+            text-align: center;
+            padding: 2em;
+        }
+        h2 {
+            text-align: center;
+            color: #c00;
+            margin-bottom: 1em;
+            font-size: 2.5em;
+            font-weight: bold;
+        }
+        p {
+            line-height: 1.8;
+            font-size: 1.2em;
+        }
+        .gallery img{
+            width: 100px;
+            height: auto;
+        }
+        /* 響應式調整 */
+        @media (max-width: 1024px) {
+            header h1 {
+                font-size: 3.5em;
+            }
+            nav a {
+                font-size: 1.2em;
+                margin: 0 0.8em;
+            }
+            h2 {
+                font-size: 2.1em;
+            }
+        }
+
+        @media (max-width: 768px) {
+            header {
+                height: 50vh;
+            }
+            header h1 {
+                font-size: 3em;
+            }
+            nav {
+                padding: 0.8em;
+            }
+            nav a {
+                display: block;
+                margin: 0.5em 0;
+                font-size: 1.3em;
+            }
+            section {
+                padding: 2em 5%;
+            }
+            h2 {
+                font-size: 2em;
+            }
+            p {
+                font-size: 1.1em;
+            }
+        }
+
+        @media (max-width: 480px) {
+            header h1 {
+                font-size: 2.5em;
+            }
+            nav a {
+                font-size: 1.2em;
+            }
+            h2 {
+                font-size: 1.8em;
+            }
+            p {
+                font-size: 1.05em;
+            }
+            .gallery-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    
+
+    <nav>
+        <a href="#intro">首頁介紹</a>
+        <a href="#history">歷史與精神</a>
+        <a href="#activities">活動與表演</a>
+        <a href="#gallery">圖片畫廊</a>
+    </nav>
+    <header>
+        <h1>桃園龍德宮神將團</h1>
+    </header>
+
+    <section id="intro">
+        <h2>歡迎來到桃園龍德宮神將團</h2>
+        <p>桃園龍德宮神將團是桃園龍德宮的重要陣頭團隊，以威武的神將表演聞名，伴隨四媽祖遶境與廟會活動，展現台灣傳統民俗文化的精髓。神將團成員肩負使命，用腳一步一步踏實前進，傳承信仰與責任。</p>
+        
+        <div class="video-container">
+            <video autoplay muted loop playsinline poster="images/poster.jpg">
+                <source src="./介紹.mp4" type="video/mp4">
+                您的瀏覽器不支援影片播放，請改用現代瀏覽器。
+            </video>
+        </div>
+        
+        <p>「每一次請神將，請著的不是重量，而是一種責任。」這是龍德宮神將團的精神寫照。</p>
+    </section>
+
+    <section id="history">
+        <h2>歷史與精神</h2>
+        <p>桃園龍德宮主祀天上聖母（四媽祖），神將團作為宮廟的護衛陣頭，參與每年南巡祈安遶境等重大活動。神將團成員透過嚴格訓練，請著神將護法，保佑信眾平安。</p>
+        <p>龍德宮神將團強調「用腳一步一步的踏著，願的是圓滿達成使命」，體現虔誠與堅持的精神。無論是遶境或廟會表演，都以磅礡氣勢震撼人心。</p>
+        <img src="./龍德宮照片.jpg"  width="500vw"  alt="桃園龍德宮外觀">
+    </section>
+
+    <section id="activities">
+        <h2>活動與表演</h2>
+        <p>神將團主要參與桃園龍德宮的年度南巡祈安遶境（9天8夜徒步進香）、中壇元帥聖誕慶典，以及各種廟會與文化活動。表演時，神將高大威猛，配合鑼鼓，帶來視覺與聽覺的震撼。</p>
+        <p>近年來，神將團也活躍於全國遶境與離島巡安，傳遞媽祖慈悲與台灣民俗之美。</p>
+        <img  src="./繞境.JPG" width="500vw" alt="神將團遶境表演">
+    </section>
+
+
+
+    <footer>
+        <p>參考來源：桃園龍德宮官網 https://www.ld4m.org.tw/ & Facebook & YouTube</p>
+        <p>本網頁為介紹用途，如需最新資訊請洽桃園龍德宮。</p>
+        <p>&copy; 2026 桃園龍德宮神將團介紹網頁</p>
+    </footer>
+
+</body>
+</html>

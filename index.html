@@ -1,232 +1,946 @@
 <!DOCTYPE html>
-<html lang="zh-TW">
+<html lang="zh-Hant">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>桃園龍德宮神將團介紹</title>
+    <title>桃園龍德宮 | 沉浸式滿版體驗</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;500;900&display=swap" rel="stylesheet">
     <style>
-        @font-face {
-            font-family: 'Bakudai';
-            src: url('./Bakudai-ExtraLight.ttf') format('woff2');
-            font-weight: normal;
-            font-style: normal;
-            font-display: swap;
+        :root {
+            --red: #c62828;
+            --gold: #ffb300;
+            --glass: rgba(255, 255, 255, 0.12);
+            --blur: blur(25px);
+            --radius: 40px;
+            /* 下面這兩個變數在重複的代碼中出現，我將其合併到這裡 */
+            --nav-width: 90%;
+            --max-w: 1200px;
         }
-body {
-            font-family: 'Bakudai', 'Microsoft JhengHei', 'Helvetica', sans-serif;
+
+        * {
             margin: 0;
             padding: 0;
-            background-color: #f8f8f8;
-            color: #333;
+            box-sizing: border-box;
+            font-family: 'Noto Sans TC', sans-serif;
         }
-        header {
-            background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('./背景.JPG') center/cover no-repeat;
-            height: 80vh;
+
+        html, body {
+            height: 100%;
+            overflow: hidden;
+            background: #000;
+        }
+
+        /* 滿版 Snap 容器 */
+        .scroll_container {
+            background-image: linear-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.5)), url('./背景.JPG');
+            background-size: cover;
+            background-position: center;
+            height: 100vh;
+            overflow-y: scroll;
+            scroll-snap-type: y mandatory;
+            scroll-behavior: smooth;
+        }
+
+        section {
+            height: 100vh;
+            width: 100%;
+            scroll-snap-align: start;
+            position: relative;
             display: flex;
             align-items: center;
             justify-content: center;
-            text-align: center;
+            overflow: hidden;
+        }
+
+        /* 背景與遮罩 */
+        .bg-img {
+            position: absolute;
+            inset: 0;
+            background-size: cover;
+            background-position: center;
+            z-index: -1;
+            filter: brightness(0.7);
+        }
+
+        /* 導覽列容器 (原本的樣式，保留但後面會被新的 main-nav 覆蓋部分) */
+        /* .main-nav {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 90%;
+            max-width: 1200px;
+            z-index: 2000;
+            background: var(--glass);
+            backdrop-filter: var(--blur);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 100px;
+            padding: 10px 30px;
+            transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        */
+
+        .announcement-bar {
+            background: linear-gradient(90deg, #c62828, #e53935); /* 現代感的紅色漸層 */
             color: white;
+            padding: 10px 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            z-index: 3000;
+            font-size: 0.9rem;
+            box-shadow: 0 4px 15px rgba(198, 40, 40, 0.2);
         }
-        header h1 {
-            font-size: 4.5em;
-            text-shadow: 3px 3px 15px rgba(0,0,0,0.9);
-            font-weight: bold;
+
+        .announcement-content {
+            display: flex;
+            align-items: center;
+            gap: 15px;
         }
-        nav {
-            background-color: #c00;
-            padding: 1em;
-            text-align: center;
+
+        /* 圓角標籤 */
+        .badge {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 2px 12px;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 0.75rem;
+            border: 1px solid rgba(255, 255, 255, 0.3);
         }
-        nav a {
-            color: white;
-            margin: 0 1.5em;
+
+        .text {
+            font-weight: 500;
+            letter-spacing: 0.5px;
+        }
+
+        .more-link {
+            color: #ffb300; /* 金色點綴 */
             text-decoration: none;
-            font-size: 1.4em;
-            font-weight: bold;
+            font-weight: 700;
+            border-bottom: 1px solid transparent;
+            transition: 0.3s;
         }
-        nav a:hover {
-            text-decoration: underline;
+
+        .more-link:hover {
+            border-bottom: 1px solid var(--gold);
         }
-        section {
-            padding: 4em 10%;
+
+        .close-announcement {
+            position: absolute;
+            right: 20px;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            opacity: 0.7;
+        }
+
+        /* 手機版適配 */
+        @media (max-width: 768px) {
+            .announcement-bar { padding: 12px 40px 12px 20px; }
+            .text { font-size: 0.8rem; line-height: 1.2; }
+            .badge { display: none; } /* 手機版簡化空間 */
+        }
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            color: white;
+            font-weight: 900;
+            letter-spacing: 2px;
+            font-size: 1.2rem;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 30px;
+        }
+
+        .nav-links a {
+            color: rgba(255,255,255,0.8);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: 0.3s;
+        }
+
+        .nav-links a:hover { color: var(--gold); }
+
+        /* --- 漢堡按鈕樣式 --- */
+        .hamburger {
+            display: none; /* 桌機預設隱藏 */
+            cursor: pointer;
+            flex-direction: column;
+            gap: 5px;
+            z-index: 2100;
+        }
+
+        .bar {
+            width: 25px;
+            height: 3px;
+            background-color: white;
+            border-radius: 10px;
+            transition: 0.4s;
+        }
+
+        /* --- 手機全屏選單 --- */
+        .mobile-menu {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.95);
+            backdrop-filter: blur(20px);
+            display: none; /* 預設隱藏 */
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 40px;
+            z-index: 2050;
+        }
+
+        .mobile-menu a {
+            color: white;
+            font-size: 2rem;
+            font-weight: 700;
+            text-decoration: none;
+            letter-spacing: 5px;
+        }
+
+        /* --- 響應式微調 (RWD) --- */
+        @media (max-width: 768px) {
+            .nav-links { display: none; } /* 隱藏桌機選單 */
+            .hamburger { display: flex; } /* 顯示漢堡 */
+            
+            .main-nav {
+                top: 15px;
+                width: 95%;
+                border-radius: 30px; /* 手機版圓角稍微修小一點點 */
+            }
+        /* --- 手機版響應式微調 (768px 以下) --- */
+    
+        /* 1. 將軍卡片容器：由橫向改為縱向 */
+        .gods-flex {
+            flex-direction: column; 
+            height: auto;           /* 取消固定高度，讓內容撐開 */
+            width: 90%;             /* 稍微調寬一點適合手機閱讀 */
+            gap: 15px;              /* 卡片間距 */
+        }
+
+        /* 2. 單張卡片設定 */
+        .god-card {
+            flex: none;             /* 取消彈性伸縮 */
+            width: 100%;
+            height: 200px;          /* 手機端固定每張卡片高度 */
+            border-radius: 20px;    /* 圓角稍微縮小 */
+        }
+
+        /* 3. 取消手機端的 Hover 伸縮效果（避免誤觸） */
+        .god-card:hover {
+            flex: none; 
+        }
+
+        /* 4. 讓卡片文字在手機端更清晰 */
+        .card-label {
+            bottom: 20px;
+            left: 20px;
+            font-size: 1.2rem;
+        }
+
+        /* 5. 強制圖片濾鏡在手機端正常顯示 */
+        .god-card img {
+            filter: grayscale(0);   /* 手機端直接顯示彩色，增加視覺感 */
+        }
+
+        /* 6. 確保 section 高度可以被內容撐開 */
+        section#p1 {
+            height: auto;
+            padding: 100px 0;      /* 增加上下留白，避免導覽列遮擋 */
+            min-height: 100vh;
+        }
+        /* 1. 調整公告網格：從 3 欄變為 1 欄 */
+        .notice-grid {
+            grid-template-columns: 1fr !important; /* 強制單欄排列 */
+            gap: 15px !important;                 /* 縮小間距，節省空間 */
+            width: 90%;                            /* 讓兩側留一點白 */
+            margin: 0 auto;
+        }
+
+        /* 2. 公告卡片優化 */
+        .notice-card {
+            padding: 20px !important;              /* 稍微縮減內距 */
+            height: auto !important;               /* 讓高度隨文字長度撐開 */
+            background: rgba(255, 255, 255, 0.1);  /* 確保毛玻璃效果在手機依然清晰 */
+            border-radius: 15px;                   /* 稍微調圓一點 */
+        }
+
+        /* 3. 文字大小調整 */
+        .notice-card h3 {
+            font-size: 1.1rem !important;          /* 標題不要太大 */
+            margin-bottom: 10px;
+            color: #ffb300;                        /* 確保標題顯眼 */
+        }
+
+        .notice-card p {
+            font-size: 0.9rem !important;          /* 內文適中，方便閱讀 */
+            line-height: 1.6;                      /* 增加行高，避免文字擠在一起 */
+        }
+
+        /* 4. 確保公告 Section 的高度可以伸縮 */
+        section#announcements {
+            height: auto !important;               /* 關鍵：取消 100vh，避免內容溢出 */
+            min-height: 100vh;                     /* 至少維持一屏高 */
+            padding: 100px 0 50px 0;               /* 留出頂部導覽列與底部空間 */
+            display: block;                        /* 手機版改為區塊佈局，方便長度延伸 */
+        }
+}
+        
+
+        /* 漢堡動畫狀態 */
+        .hamburger.active .bar:nth-child(1) { transform: translateY(8px) rotate(45deg); }
+        .hamburger.active .bar:nth-child(2) { opacity: 0; }
+        .hamburger.active .bar:nth-child(3) { transform: translateY(-8px) rotate(-45deg); }
+        
+        /* --- 右側圓點導覽 (Dots) --- */
+        .side-nav {
+            position: fixed;
+            right: 30px;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .dot {
+            width: 12px;
+            height: 12px;
+            background: rgba(255,255,255,0.3);
+            border-radius: 50%;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .dot.active {
+            background: var(--gold);
+            transform: scale(1.5);
+            box-shadow: 0 0 10px var(--gold);
+        }
+
+        /* --- 上下頁按鈕 (Controls) --- */
+        .page-controls {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .control-btn {
+            width: 50px;
+            height: 50px;
+            background: var(--glass);
+            backdrop-filter: var(--blur);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 50%;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 1.2rem;
+            transition: 0.3s;
+            user-select: none;
+        }
+
+        .control-btn:hover {
+            background: white;
+            color: var(--red);
+        }
+
+        /* --- 內容設計 --- */
+        .hero-title {
+            text-align: center;
+            color: white;
+        }
+
+        .hero-title h1 {
+            font-size: 5rem;
+            margin-bottom: 20px;
+            background: linear-gradient(45deg, #fff, var(--gold));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .countdown-wrap {
+            display: flex;
+            gap: 15px;
+            background: var(--glass);
+            backdrop-filter: var(--blur);
+            padding: 25px;
+            border-radius: var(--radius);
+            border: 1px solid rgba(255,255,255,0.1);
+            justify-content: center;
+        }
+
+        .time-box span { font-size: 2.5rem; font-weight: 900; color: var(--gold); display: block; }
+        .time-box p { font-size: 0.7rem; opacity: 0.7; letter-spacing: 1px; }
+
+        /* 伸縮神將卡片 */
+        .gods-flex {
+            display: flex;
+            width: 85%;
+            height: 60vh;
+            gap: 20px;
+        }
+
+        .god-card {
+            flex: 1;
+            border-radius: var(--radius);
+            overflow: hidden;
+            position: relative;
+            transition: 0.7s cubic-bezier(0.2, 1, 0.3, 1);
+            cursor: pointer;
+        }
+
+        .god-card:hover { flex: 3; }
+        .god-card img { width: 100%; height: 100%; object-fit: cover; filter: grayscale(0.3); transition: 0.5s; }
+        .god-card:hover img { filter: grayscale(0); }
+
+        .card-label {
+            position: absolute;
+            bottom: 30px;
+            left: 30px;
+            color: white;
+            font-weight: 700;
+            font-size: 1.5rem;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.5);
+        }
+
+        /* 燈箱 LB */
+        #lb {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.9);
+            backdrop-filter: blur(10px);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+        }
+        #lb img { max-width: 90%; max-height: 80%; border-radius: 20px; border: 2px solid var(--gold); }
+
+        /* 從重複代碼中保留的樣式，用於新的結構 */
+        /* 最外層包裹，負責固定位置 */
+        .header-wrapper {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%; /* 確保橫幅填滿左右，不露黑邊 */
+            z-index: 5000;
+            display: flex;
+            flex-direction: column;
+            align-items: center; /* 讓內部的 nav 能夠自動置中 */
+        }
+
+        /* 公告橫幅樣式覆蓋 */
+        .header-wrapper .announcement-bar {
+            width: 100%;
+            background: var(--red);
+            color: white;
+            padding: 10px 0;
+            transition: 0.3s ease-in-out;
+        }
+
+        /* 導覽列：膠囊狀置中設計樣式覆蓋 */
+        .header-wrapper .main-nav {
+            position: static; /* 彈出原本的 fixed 定位 */
+            transform: none;
+            left: auto;
+            top: auto;
+            width: var(--nav-width);
+            max-width: var(--max-w);
+            margin-top: 35px; /* 這裡產生跟橫幅的間距，露出後方背景圖 */
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 100px; /* 現代感大圓角 */
+            padding: 12px 30px;
+            transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* 讓導覽列在捲動後更精簡 (這個樣式需要 scrolled 類才能生效) */
+        .main-nav.scrolled {
+            margin-top: 5px;
+            width: 85%;
+            padding: 8px 25px;
+            background: rgba(0, 0, 0, 0.6);
+        }
+
+        .notice-section {
+            padding: 100px 5%;
+            background: #fdfdfd;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .badge-red {
+            background: var(--red);
+            color: white;
+            padding: 4px 15px;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            letter-spacing: 2px;
+        }
+
+        /* 公告網格 */
+        .notice-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
             max-width: 1200px;
             margin: 0 auto;
         }
-        #intro {
-            background-color: #fff;
-            text-align: center;
-        }
-        #intro .video-container {
+
+        /* 現代卡片設計 */
+        .notice-card {
+            background: white;
+            padding: 40px;
+            border-radius: 30px; /* 大圓角 */
+            box-shadow: 0 10px 40px rgba(0,0,0,0.05);
+            transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
             position: relative;
-            padding-bottom: 56.25%;
-            height: 0;
-            overflow: hidden;
-            max-width: 100%;
-            border-radius: 5px 30px; /* 影片容器也套用相同圓角 */
-            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
-            margin: 2em 0;
+            border: 1px solid #f0f0f0;
+            display: flex;
+            flex-direction: column;
         }
-        #intro .video-container video {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            border-radius: 5px 30px; /* 確保影片本身也跟隨圓角 */
+
+        .notice-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 50px rgba(198, 40, 40, 0.1);
+            border-color: rgba(198, 40, 40, 0.2);
         }
-        #history, #activities {
-            background-color: #fef5f5;
+
+        /* 重要公告的特殊樣式 */
+        .notice-card.highlight {
+            background: linear-gradient(145deg, #ffffff, #fff5f5);
         }
-        #gallery {
-            background-color: #fff;
+
+        /* 標籤樣式 */
+        .card-tag {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 10px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+            width: fit-content;
         }
-        .gallery-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2em;
+
+        .tag-urgent { background: #ffebee; color: #d32f2f; }
+        .tag-event { background: #fff8e1; color: #f57f17; }
+        .tag-info { background: #e3f2fd; color: #1976d2; }
+
+        .card-date {
+            color: #999;
+            font-size: 0.85rem;
+            margin-bottom: 10px;
         }
-        /* 全部照片（包含單張圖片與畫廊內圖片）統一套用 border-radius: 5px 30px; */
-        img {
-            border-radius: 5px 30px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-            height: auto;
-            display: block;
-            transition: transform 0.3s;
+
+        .notice-card h3 {
+            font-size: 1.25rem;
+            margin-bottom: 15px;
+            color: #333;
+            line-height: 1.4;
         }
-        img:hover {
-            transform: scale(1.05);
+
+        .notice-card p {
+            color: #666;
+            font-size: 0.95rem;
+            margin-bottom: 25px;
+            flex-grow: 1; /* 確保按鈕始終對齊底部 */
         }
-        footer {
-            background-color: #333;
+
+        .read-more:hover {
+            letter-spacing: 1px;
+        }
+
+        .btn-outline {
+            display: inline-block;
+            padding: 12px 40px;
+            border: 2px solid var(--red);
+            color: var(--red);
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 700;
+            transition: 0.3s;
+        }
+
+        .btn-outline:hover {
+            background: var(--red);
             color: white;
-            text-align: center;
-            padding: 2em;
         }
-        h2 {
-            text-align: center;
-            color: #c00;
-            margin-bottom: 1em;
-            font-size: 2.5em;
-            font-weight: bold;
-        }
-        p {
-            line-height: 1.8;
-            font-size: 1.2em;
-        }
-        .gallery img{
-            width: 100px;
-            height: auto;
-        }
-        /* 響應式調整 */
-        @media (max-width: 1024px) {
-            header h1 {
-                font-size: 3.5em;
-            }
-            nav a {
-                font-size: 1.2em;
-                margin: 0 0.8em;
-            }
-            h2 {
-                font-size: 2.1em;
-            }
+        .copyright-area {
+            background: #111; /* 比主頁尾稍微深色，做出區隔 */
+            padding: 20px 0;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
         }
 
+        .copyright-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between; /* 桌機版：左右對齊 */
+            align-items: center;
+            color: #666;
+            font-size: 0.85rem;
+        }
+
+        .footer-bottom-links a {
+            color: #666;
+            text-decoration: none;
+            transition: 0.3s;
+        }
+
+        .footer-bottom-links a:hover {
+            color: #ffb300; /* 懸停時變金色 */
+        }
+
+        .separator {
+            margin: 0 10px;
+            color: #333;
+        }
+
+        /* --- 手機響應式修正 --- */
         @media (max-width: 768px) {
-            header {
-                height: 50vh;
+            .copyright-container {
+                flex-direction: column; /* 手機版：上下堆疊 */
+                gap: 10px;             /* 增加版權與連結間的間距 */
+                text-align: center;    /* 文字置中 */
+                font-size: 0.75rem;    /* 稍微縮小字體 */
             }
-            header h1 {
-                font-size: 3em;
-            }
-            nav {
-                padding: 0.8em;
-            }
-            nav a {
-                display: block;
-                margin: 0.5em 0;
-                font-size: 1.3em;
-            }
-            section {
-                padding: 2em 5%;
-            }
-            h2 {
-                font-size: 2em;
-            }
-            p {
-                font-size: 1.1em;
-            }
-        }
 
-        @media (max-width: 480px) {
-            header h1 {
-                font-size: 2.5em;
+            .separator {
+                display: none;         /* 手機版隱藏分隔線，改用換行處理 */
             }
-            nav a {
-                font-size: 1.2em;
-            }
-            h2 {
-                font-size: 1.8em;
-            }
-            p {
-                font-size: 1.05em;
-            }
-            .gallery-grid {
-                grid-template-columns: 1fr;
+
+            .footer-bottom-links {
+                display: flex;
+                flex-direction: column; /* 連結也改為垂直排列，方便點擊 */
+                gap: 5px;
             }
         }
     </style>
 </head>
 <body>
-
-    
-
-    <nav>
-        <a href="#intro">首頁介紹</a>
-        <a href="#history">歷史與精神</a>
-        <a href="#activities">活動與表演</a>
-        <a href="#gallery">圖片畫廊</a>
-    </nav>
-    <header>
-        <h1>桃園龍德宮神將團</h1>
-    </header>
-
-    <section id="intro">
-        <h2>歡迎來到桃園龍德宮神將團</h2>
-        <p>桃園龍德宮神將團是桃園龍德宮的重要陣頭團隊，以威武的神將表演聞名，伴隨四媽祖遶境與廟會活動，展現台灣傳統民俗文化的精髓。神將團成員肩負使命，用腳一步一步踏實前進，傳承信仰與責任。</p>
-        
-        <div class="video-container">
-            <video autoplay muted loop playsinline poster="images/poster.jpg">
-                <source src="./介紹.mp4" type="video/mp4">
-                您的瀏覽器不支援影片播放，請改用現代瀏覽器。
-            </video>
+    <div class="header-wrapper">
+        <div class="announcement-bar">
+            <div class="announcement-content">
+                <span class="badge">重要公告</span>
+                <p class="text">2026 桃園龍德宮神將團 全新千順將軍 將在起馬當日 開光</p>
+            </div>
+            <button class="close-announcement" id="closeBar">&times;</button>
         </div>
+        <nav class="main-nav">
+            <div class="nav-container">
+                <div class="logo">桃園龍德宮</div>
+                
+                <ul class="nav-links">
+                    <li><a href="#p0">首頁</a></li>
+                    <li><a href="#p2">最新公告</a></li>
+                    <li><a href="#p1">護法神將</a></li>
+                    <li><a href="#p3">活動圖庫</a></li>
+                </ul>
+
+                <div class="hamburger" id="hamburger">
+                    <div class="bar"></div>
+                    <div class="bar"></div>
+                    <div class="bar"></div>
+                    <div class="bar"></div>
+                </div>
+            </div>
+        </nav>
+    </div>
+
+    <div class="mobile-menu" id="mobileMenu">
+        <a href="#p0" onclick="toggleMenu()">首頁</a>
+        <a href="#p2" onclick="toggleMenu()">最新公告</a>
+        <a href="#p1" onclick="toggleMenu()">護法神將</a>
+        <a href="#p3" onclick="toggleMenu()">活動圖庫</a>
+
+    </div>
+
+    <div class="side-nav">
+        <div class="dot active" data-index="0"></div>
+        <div class="dot" data-index="2"></div>
+        <div class="dot" data-index="1"></div>
+        <div class="dot" data-index="3"></div>
+    </div>
+
+    <div class="page-controls">
+        <div class="control-btn" id="prevBtn">▲</div>
+        <div class="control-btn" id="nextBtn">▼</div>
+    </div>
+
+    <div class="scroll_container" id="mainContainer">
         
-        <p>「每一次請神將，請著的不是重量，而是一種責任。」這是龍德宮神將團的精神寫照。</p>
-    </section>
+        <section id="p0">
+            <div class="bg-img" style="background-image: url('./背景.JPG');"></div>
+            <div class="hero-title">
+                <h1 style="font-size: 90px">龍德神將</h1>
+                <h1 style="font-size: 30px;">歲次丙午年 九天八夜<br>鹿港刈火 南下高雄 活動到數</h1>
+                <div class="countdown-wrap">
+                    <div class="time-box"><span id="d">00</span><p>DAYS</p></div>
+                    <div class="time-box"><span id="h">00</span><p>HOURS</p></div>
+                    <div class="time-box"><span id="m">00</span><p>MINS</p></div>
+                    <div class="time-box"><span id="s">00</span><p>SECS</p></div>
+                </div>
+            </div>
+        </section>
+        <section id="announcements" class="notice-section">
+            <div class="section-header">
+                <span class="badge-red">NEWS</span>
+                <h2>最新公告專區</h2>
+                <p>掌握龍德宮第一手訊息與遶境資訊</p>
+            </div>
 
-    <section id="history">
-        <h2>歷史與精神</h2>
-        <p>桃園龍德宮主祀天上聖母（四媽祖），神將團作為宮廟的護衛陣頭，參與每年南巡祈安遶境等重大活動。神將團成員透過嚴格訓練，請著神將護法，保佑信眾平安。</p>
-        <p>龍德宮神將團強調「用腳一步一步的踏著，願的是圓滿達成使命」，體現虔誠與堅持的精神。無論是遶境或廟會表演，都以磅礡氣勢震撼人心。</p>
-        <img src="./龍德宮照片.jpg"  width="500vw"  alt="桃園龍德宮外觀">
-    </section>
+            <div id="p2"class="notice-grid">
+                <div class="notice-card highlight">
+                    <div class="card-tag tag-urgent">重要</div>
+                    <div class="card-date">2026.03.20</div>
+                    <h3>丙午年徒步遶境：邀請十方信眾共襄盛舉</h3>
+                    <p>邀請各位信眾，撥空前來參與本次遶境</p>
+                </div>
 
-    <section id="activities">
-        <h2>活動與表演</h2>
-        <p>神將團主要參與桃園龍德宮的年度南巡祈安遶境（9天8夜徒步進香）、中壇元帥聖誕慶典，以及各種廟會與文化活動。表演時，神將高大威猛，配合鑼鼓，帶來視覺與聽覺的震撼。</p>
-        <p>近年來，神將團也活躍於全國遶境與離島巡安，傳遞媽祖慈悲與台灣民俗之美。</p>
-        <img  src="./繞境.JPG" width="500vw" alt="神將團遶境表演">
-    </section>
+                <div class="notice-card">
+                    <div class="card-tag tag-event">活動</div>
+                    <div class="card-date">2026.03.15</div>
+                    <h3>丙午新將軍，繞境護駕來開光</h3>
+                    <p>將於國曆4月4日舉行千順將軍開光，歡迎十方信眾同霑法喜，共祈平安。</p>
+                </div>
+            </div> </section>
+        <section id="p1" style="background: #111;">
+            <div class="gods-flex">
+                <div class="god-card">
+                    <img src="./千里眼.JPG" alt="1">
+                    <div class="card-label">千里眼將軍</div>
+                </div>
+                <div class="god-card">
+                    <img src="./順風耳.JPG" alt="2">
+                    <div class="card-label">順風耳將軍</div>
+                </div>
+                <div class="god-card">
+                    <img src="./太子.JPG" alt="3">
+                    <div class="card-label">中壇元帥</div>
+                </div>
+                <div class="god-card">
+                    <img src="./濟公.JPG" alt="4">
+                    <div class="card-label">濟公活佛</div>
+                </div>
+                <div class="god-card">
+                    <img src="./土地公.JPG" alt="3">
+                    <div class="card-label">福德正神</div>
+                </div>
+            </div>
+        </section>
 
+        <section id="p3" style="background: #000;">
+            <div style="width: 85%; color: white; text-align: center;">
+                <h2 style="margin-bottom: 30px; letter-spacing: 5px;">活動影像</h2>
+            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px;">
+                    <p>暫無內容，敬請期待</p>
+            </div>
+            <div class="copyright-area"></div>
+            <div class="copyright-container">
+                <p>© 2026 桃園龍德宮 神將團 版權所有 All Rights Reserved.</p>
+                <p>網站設計：一拍一剪影像工作室</p>
+                </div>
+            </div>
+        </section>
 
+    </div>
 
-    <footer>
-        <p>參考來源：桃園龍德宮官網 https://www.ld4m.org.tw/ & Facebook & YouTube</p>
-        <p>本網頁為介紹用途，如需最新資訊請洽桃園龍德宮。</p>
-        <p>&copy; 2026 桃園龍德宮神將團介紹網頁</p>
-    </footer>
+    <div id="lb" onclick="this.style.display='none'"><img src="" id="lb-img"></div>
 
+    <script>
+        const hamburger = document.getElementById('hamburger');
+        const mobileMenu = document.getElementById('mobileMenu');
+
+        // 切換選單開關
+        function toggleMenu() {
+            hamburger.classList.toggle('active');
+            // 使用 flex 而不是 block 以保持置中佈局
+            if (mobileMenu.style.display === 'flex') {
+                mobileMenu.style.display = 'none';
+                document.body.style.overflow = 'auto'; // 恢復滾動
+            } else {
+                mobileMenu.style.display = 'flex';
+                document.body.style.overflow = 'hidden'; // 鎖定滾動
+            }
+        }
+
+        hamburger.addEventListener('click', toggleMenu);
+
+        // 滾動時導覽列自動縮小效果 (更顯現代感)
+        const nav = document.querySelector('.main-nav');
+        // 修正：捲動事件應綁定在 .scroll_container 上
+        document.getElementById('mainContainer').addEventListener('scroll', (e) => {
+            if (e.target.scrollTop > 50) {
+                nav.style.padding = "5px 25px";
+                nav.style.width = "85%";
+                nav.style.backgroundColor = "rgba(0,0,0,0.5)";
+            } else {
+                nav.style.padding = "10px 30px";
+                nav.style.width = "90%";
+                nav.style.backgroundColor = "var(--glass)";
+            }
+        });
+
+        const container = document.getElementById('mainContainer');
+        const dots = document.querySelectorAll('.dot');
+        const sections = document.querySelectorAll('section');
+        let currentIdx = 0;
+
+        // 1. 更新右側點點狀態
+        container.addEventListener('scroll', () => {
+            const index = Math.round(container.scrollTop / window.innerHeight);
+            if (index !== currentIdx && index < dots.length) { // 增加 index < dots.length 的檢查
+                currentIdx = index;
+                dots.forEach(d => d.classList.remove('active'));
+                dots[currentIdx].classList.add('active');
+            }
+        });
+
+        // 2. 點擊點點跳轉
+        dots.forEach(dot => {
+            dot.onclick = () => {
+                const idx = dot.getAttribute('data-index');
+                document.getElementById('p' + idx).scrollIntoView({ behavior: 'smooth' });
+            };
+        });
+
+        // 3. 上下按鈕邏輯
+        document.getElementById('nextBtn').onclick = () => {
+            if (currentIdx < sections.length - 1) {
+                sections[currentIdx + 1].scrollIntoView({ behavior: 'smooth' });
+            } else {
+                sections[0].scrollIntoView({ behavior: 'smooth' }); // 回首頁
+            }
+        };
+
+        document.getElementById('prevBtn').onclick = () => {
+            if (currentIdx > 0) {
+                sections[currentIdx - 1].scrollIntoView({ behavior: 'smooth' });
+            }
+        };
+
+        // 4. 倒數器 (目標 2026)
+        const target = new Date("April 4 , 2026 20:00:00").getTime();
+        setInterval(() => {
+            const now = new Date().getTime();
+            const diff = target - now;
+            
+            // 增加 diff > 0 的檢查，避免顯示負數
+            if (diff > 0) {
+                document.getElementById('d').innerText = Math.floor(diff / (1000 * 60 * 60 * 24));
+                document.getElementById('h').innerText = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                document.getElementById('m').innerText = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                document.getElementById('s').innerText = Math.floor((diff % (1000 * 60)) / 1000);
+            } else {
+                // 時間到的顯示邏輯 (可根據需要修改)
+                document.getElementById('d').innerText = "00";
+                document.getElementById('h').innerText = "00";
+                document.getElementById('m').innerText = "00";
+                document.getElementById('s').innerText = "00";
+            }
+        }, 1000);
+
+        // 5. 燈箱
+        document.querySelectorAll('.gal-img').forEach(img => {
+            img.onclick = () => {
+                document.getElementById('lb-img').src = img.src;
+                document.getElementById('lb').style.display = 'flex';
+            };
+        });
+        
+        // 綁定 closeBar 的匿名事件監聽器
+        document.getElementById('closeBar').addEventListener('click', function() {
+            const bar = this.parentElement;
+            bar.style.transition = '0.4s cubic-bezier(0.4, 0, 0.2, 1)';
+            bar.style.opacity = '0';
+            bar.style.transform = 'translateY(-100%)';
+            
+            // 延遲移除元素，避免影響佈局
+            setTimeout(() => {
+                bar.style.display = 'none';
+            }, 400);
+        });
+
+        // 保留但目前未被 HTML 調用的函數
+        function closeAnn() {
+            const bar = document.getElementById('annBar'); // 注意：HTML中沒有這個 ID，這裡保留原樣
+            const nav = document.querySelector('.main-nav');
+            
+            if (bar) {
+                bar.style.marginTop = "-50px"; // 向上滑動消失
+                bar.style.opacity = "0";
+                
+                setTimeout(() => {
+                    bar.style.display = 'none';
+                    // 橫幅消失後，導覽列會自動因為 flex 佈局而上移到頂部
+                    if (nav) nav.style.marginTop = "20px"; 
+                }, 300);
+            }
+        }  
+
+        // 保留但目前無效的監聽器 (因為 body 是 overflow: hidden)
+        window.addEventListener('scroll', () => {
+            const nav = document.querySelector('.main-nav');
+            if (nav) {
+                if (window.scrollY > 50) {
+                    nav.classList.add('scrolled');
+                } else {
+                    nav.classList.remove('scrolled');
+                }
+            }
+        });
+
+        // 使用 Intersection Observer 製作登場動畫
+        const observerOptions = {
+            threshold: 0.1
+        };
+
+        const noticeObserver = new IntersectionObserver((entries) => {
+            entries.forEach((entry, index) => {
+                if (entry.isIntersecting) {
+                    // 增加一點延遲延遲效果 (Stagger animation)
+                    setTimeout(() => {
+                        entry.target.style.opacity = "1";
+                        entry.target.style.transform = "translateY(0)";
+                    }, index * 150);
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.notice-card').forEach(card => {
+            card.style.opacity = "0";
+            card.style.transform = "translateY(30px)";
+            card.style.transition = "all 0.6s ease-out";
+            noticeObserver.observe(card);
+        });
+    </script>
 </body>
 </html>
